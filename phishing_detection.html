@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAT4520 Machine Learning Phishing/Scam Detection</title>
+    <style>
+        body {
+            text-align: center;
+        }
+        .header {
+            font-weight: bold;
+            margin-top: 50px;
+        }
+        .start-button, .submit-button, .return-button {
+            margin-top: 20px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+        }
+        #loading {
+            display: none;
+            margin-top: 50px;
+        }
+        #progress-bar {
+            width: 0%;
+            height: 30px;
+            background-color: #007bff;
+        }
+        #result {
+            display: none;
+            margin-top: 50px;
+        }
+        .red {
+            color: red;
+        }
+        .green {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div id="home-screen">
+        <h1 class="header">SAT4520 Machine Learning Phishing/Scam Detection</h1>
+        <button class="start-button" onclick="showEnterEmailScreen()">START</button>
+    </div>
+
+    <div id="enter-email-screen" style="display: none;">
+        <h1 class="header">Enter Email Subject:</h1>
+        <form id="email-form" onsubmit="submitEmail(event)">
+            <input type="text" id="email-subject" name="email-subject"><br><br>
+            <button type="submit" class="submit-button">Submit</button>
+        </form>
+    </div>
+
+    <div id="loading" style="display: none;">
+        <h1 class="header">Loading...</h1>
+        <div id="progress-bar"></div>
+    </div>
+
+    <div id="result" style="display: none;">
+        <h1 class="header">Result</h1>
+        <p id="result-text"></p>
+        <button class="return-button" onclick="showHomeScreen()">Return</button>
+    </div>
+
+    <script>
+        function showEnterEmailScreen() {
+            document.getElementById("home-screen").style.display = "none";
+            document.getElementById("enter-email-screen").style.display = "block";
+        }
+
+        function submitEmail(event) {
+            event.preventDefault();
+
+            document.getElementById("enter-email-screen").style.display = "none";
+            document.getElementById("loading").style.display = "block";
+
+            var progressBar = document.getElementById("progress-bar");
+            var width = 0;
+            var interval = setInterval(frame, 100);
+
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    showResultScreen();
+                } else {
+                    width++;
+                    progressBar.style.width = width + "%";
+                }
+            }
+        }
+
+        function showResultScreen() {
+            document.getElementById("loading").style.display = "none";
+            document.getElementById("result").style.display = "block";
+
+            var subject = document.getElementById("email-subject").value;
+            var resultText = document.getElementById("result-text");
+
+            // Dummy logic to determine phishing or not
+            var isPhishing = subject.toLowerCase().includes("phishing") ? true : false;
+            
+            if (isPhishing) {
+                resultText.innerText = "The entered email subject line is likely to be a phishing email.";
+                resultText.classList.add("red");
+            } else {
+                resultText.innerText = "The entered email subject line is likely to be a legitimate email.";
+                resultText.classList.add("green");
+            }
+        }
+
+        function showHomeScreen() {
+            document.getElementById("result").style.display = "none";
+            document.getElementById("home-screen").style.display = "block";
+            document.getElementById("result-text").classList.remove("red");
+            document.getElementById("result-text").classList.remove("green");
+            document.getElementById("email-form").reset();
+        }
+    </script>
+</body>
+</html>
